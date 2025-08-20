@@ -8,9 +8,6 @@ WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
 
-# Copy .env file
-COPY .env .env
-
 # Copy all source code
 COPY . .
 
@@ -24,6 +21,7 @@ RUN go build -o main ./cmd/app
 FROM alpine:latest
 WORKDIR /app
 COPY --from=builder /app/main .
-COPY --from=builder /app/.env .env
+
+EXPOSE 8080
 
 CMD ["./main"]

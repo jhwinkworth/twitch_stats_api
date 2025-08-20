@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"fourthfloor/internal/model"
+	"log"
 	"net/http"
 	"sync"
 	"time"
@@ -126,6 +127,8 @@ func (c *TwitchAPIClient) FetchVideos(channelID string, limit int) ([]model.Vide
 	if err := c.EnsureTokenValid(); err != nil {
 		return nil, err
 	}
+
+	log.Printf("Fetching videos")
 
 	req, _ := http.NewRequest("GET", fmt.Sprintf("%s?user_id=%s&first=%d", c.BaseURL, channelID, limit), nil)
 	req.Header.Set("Client-ID", c.ClientID)

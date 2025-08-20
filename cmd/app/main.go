@@ -13,8 +13,7 @@ import (
 
 func main() {
 	cfg := config.LoadEnv(".env")
-	log.Println("Loaded Twitch Client ID:", cfg.ClientID)
-
+	
 	if cfg.ClientID == "" || cfg.ClientSecret == "" {
 		log.Fatal("twitch credentials missing")
 	}

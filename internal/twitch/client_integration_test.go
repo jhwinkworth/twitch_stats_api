@@ -14,12 +14,15 @@ func TestFetchVideos_Integration(t *testing.T) {
 
 	client := twitch.NewTwitchAPIClient(cfg.ClientID, cfg.ClientSecret)
 
-	videos, err := client.FetchVideos(cfg.ChannelID, 2)
+	// Number of videos to return
+	limit := 10
+
+	videos, err := client.FetchVideos(cfg.ChannelID, limit)
 	if err != nil {
 		t.Fatalf("FetchVideos failed: %v", err)
 	}
 
-	if len(videos) == 0 {
-		t.Errorf("Expected at least 1 video, got %d", len(videos))
+	if len(videos) != limit {
+		t.Errorf("Wanted %d videos, got %d", limit, len(videos))
 	}
 }

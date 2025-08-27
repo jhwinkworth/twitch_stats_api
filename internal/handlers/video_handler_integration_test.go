@@ -20,28 +20,23 @@ import (
 func TestVideoHandler_Integration(t *testing.T) {
 	cfg := config.LoadEnv("../../.env")
 
-	// Create a real Twitch client
+	// create a real Twitch client
 	client := twitch.NewTwitchAPIClient(cfg.ClientID, cfg.ClientSecret)
 
-	// Create service using the Twitch client
 	videoService := &service.VideoService{
 		TwitchClient: client,
 	}
 
-	// Create handler with the service
 	handler := &handlers.VideoHandler{
 		Service: videoService,
 	}
 
-	// Setup router
 	router := mux.NewRouter()
 	router.HandleFunc("/streamers/{channel_id}/videos", handler.GetStreamerVideosHandler).Methods("GET")
 
-	// Test request
 	req := httptest.NewRequest("GET", "/streamers/"+cfg.ChannelID+"/videos?n=2", nil)
 	rec := httptest.NewRecorder()
 
-	// Serve the request
 	router.ServeHTTP(rec, req)
 
 	if rec.Code != http.StatusOK {

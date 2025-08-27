@@ -14,6 +14,7 @@ type Config struct {
 	ChannelID    string
 }
 
+// LoadEnv loads environment variables given a path
 func LoadEnv(envFile string) Config {
 	if err := godotenv.Load(envFile); err != nil {
 		log.Print(err)

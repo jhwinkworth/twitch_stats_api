@@ -97,7 +97,7 @@ func TestGetStreamerVideosHandler(t *testing.T) {
 				t.Errorf("expected body to contain %q, got %q", tt.expectedInBody, body)
 			}
 
-			// For successful responses, also check JSON can be decoded
+			// check JSON can be decoded
 			if rec.Code == http.StatusOK {
 				var resp model.VideoStatsResponse
 				if err := json.NewDecoder(rec.Body).Decode(&resp); err != nil {

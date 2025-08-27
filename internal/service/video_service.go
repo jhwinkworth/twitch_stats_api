@@ -35,12 +35,12 @@ func (s *VideoService) GetVideoStats(channelID string, limit int) (model.VideoSt
 	for _, v := range videos {
 		totalViews += v.ViewCount
 
-		// Parse duration
+		// parse duration
 		if dur, err := time.ParseDuration(v.Duration); err == nil {
 			totalDur += dur.Minutes()
 		}
 
-		// Track most viewed video
+		// track most viewed video
 		if v.ViewCount > mostViewed.ViewCount {
 			mostViewed = v
 		}

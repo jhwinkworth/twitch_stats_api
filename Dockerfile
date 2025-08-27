@@ -4,20 +4,20 @@ FROM golang:1.24-alpine AS builder
 # Set working directory
 WORKDIR /app
 
-# Copy Go modules and download dependencies
+# copy Go modules and download dependencies
 COPY go.mod go.sum ./
 RUN go mod download
 
-# Copy all source code
+# copy all source code
 COPY . .
 
-# Run tests (fail build if tests fail)
+# run tests (fail build if tests fail)
 RUN go test -v -tags=integration ./...
 
-# Build the binary
+# build the binary
 RUN go build -o main ./cmd/app
 
-# Final lightweight image
+# final lightweight image
 FROM alpine:latest
 WORKDIR /app
 COPY --from=builder /app/main .

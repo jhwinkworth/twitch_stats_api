@@ -14,6 +14,8 @@ type VideoHandler struct {
 	Service service.VideoServiceInterface
 }
 
+// GetStreamerVideosHandler handler to return n (query parameter) videos for a single
+// streamer given their channel ID (path parameter)
 func (h *VideoHandler) GetStreamerVideosHandler(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	channelID := params["channel_id"]

@@ -16,6 +16,7 @@ type mockTwitchClient struct {
 	err    error
 }
 
+// FetchVideos mock return from FetchVideos function (client.go)
 func (m *mockTwitchClient) FetchVideos(channelID string, limit int) ([]model.Video, error) {
 	return m.videos, m.err
 }
@@ -91,7 +92,7 @@ func TestVideoService_GetVideoStats(t *testing.T) {
 					t.Errorf("expected most viewed %q, got %q", tt.expectedMost, stats.MostViewedTitle)
 				}
 
-				// Only check total duration if at least one valid duration exists
+				// only check total duration if at least one valid duration exists
 				hasValidDuration := false
 				for _, v := range tt.videos {
 					if _, err := time.ParseDuration(v.Duration); err == nil {
@@ -99,15 +100,17 @@ func TestVideoService_GetVideoStats(t *testing.T) {
 						break
 					}
 				}
+
 				if hasValidDuration && stats.TotalDurationMinutes <= 0 {
-					t.Errorf("expected total duration > 0, got %f", stats.TotalDurationMinutes)
+					t.Errorf("wanted total duration > 0, got %f", stats.TotalDurationMinutes)
 				}
 
 				if stats.TotalDurationMinutes > 0 && stats.AvgViewsPerMinute <= 0 {
-					t.Errorf("expected AvgViewsPerMinute > 0, got %f", stats.AvgViewsPerMinute)
+					t.Errorf("wanted AvgViewsPerMinute > 0, got %f", stats.AvgViewsPerMinute)
 				}
+
 				if stats.AverageViews <= 0 {
-					t.Errorf("expected AverageViews > 0, got %f", stats.AverageViews)
+					t.Errorf("wanted AverageViews > 0, got %f", stats.AverageViews)
 				}
 			}
 		})

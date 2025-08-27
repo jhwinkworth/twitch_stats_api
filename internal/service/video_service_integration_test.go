@@ -12,7 +12,7 @@ import (
 func TestVideoService_Integration(t *testing.T) {
 	cfg := config.LoadEnv("../../.env")
 
-	// Create a real Twitch client
+	// create a real Twitch client
 	client := twitch.NewTwitchAPIClient(cfg.ClientID, cfg.ClientSecret)
 
 	videoService := &service.VideoService{TwitchClient: client}
@@ -22,6 +22,6 @@ func TestVideoService_Integration(t *testing.T) {
 		t.Fatalf("FetchVideos failed: %v", err)
 	}
 
-	// No concrete assertion against stats so just log
+	// no concrete assertion against stats so just log
 	t.Logf("Integration test returned stats: %+v", stats)
 }

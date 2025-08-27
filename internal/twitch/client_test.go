@@ -14,7 +14,7 @@ import (
 
 // ---- Mocks ----
 
-// mock token server response
+// tokenHandler mock token server response
 func tokenHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	_ = json.NewEncoder(w).Encode(map[string]interface{}{
@@ -24,7 +24,7 @@ func tokenHandler(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// mock videos server response
+// videosHandler mock videos server response
 func videosHandler(w http.ResponseWriter, r *http.Request) {
 	auth := r.Header.Get("Authorization")
 	if auth == "" {
@@ -47,7 +47,7 @@ func TestFetchVideos(t *testing.T) {
 	videosSrv := httptest.NewServer(http.HandlerFunc(videosHandler))
 	defer videosSrv.Close()
 
-	// Custom refresh func hitting token server
+	// custom refresh func hitting token server
 	refresh := func() (string, time.Time, error) {
 		req, _ := http.NewRequest("POST", tokenSrv.URL, nil)
 		resp, err := http.DefaultClient.Do(req)
@@ -66,7 +66,7 @@ func TestFetchVideos(t *testing.T) {
 		return tr.AccessToken, time.Now().Add(time.Duration(tr.ExpiresIn) * time.Second), nil
 	}
 
-	// Client with mock video base URL and refresh func
+	// client with mock video base URL and refresh func
 	client := twitch.NewTwitchAPIClient("fake-client-id", "fake-secret",
 		twitch.WithBaseURL(videosSrv.URL),
 		twitch.WithRefreshFunc(refresh),
@@ -78,19 +78,19 @@ func TestFetchVideos(t *testing.T) {
 	}
 
 	if len(videos) != 1 || videos[0].Title != "Test Video" {
-		t.Errorf("expected 1 video with Title=Test Video, got %+v", videos)
+		t.Errorf("wanted 1 video with Title=Test Video, got %+v", videos)
 	}
 }
 
 func TestFetchVideosWithExpiredToken(t *testing.T) {
-	// mock servers
+	// spin up mock servers
 	tokenSrv := httptest.NewServer(http.HandlerFunc(tokenHandler))
 	defer tokenSrv.Close()
 
 	videosSrv := httptest.NewServer(http.HandlerFunc(videosHandler))
 	defer videosSrv.Close()
 
-	// custom refresh func
+	// custom refresh func hitting token server
 	refresh := func() (string, time.Time, error) {
 		req, _ := http.NewRequest("POST", tokenSrv.URL, nil)
 		resp, err := http.DefaultClient.Do(req)
@@ -123,7 +123,7 @@ func TestFetchVideosWithExpiredToken(t *testing.T) {
 	}
 
 	if len(videos) != 1 || videos[0].Title != "Test Video" {
-		t.Errorf("expected 1 refreshed video, got %+v", videos)
+		t.Errorf("wanted 1 video with title=Test Video, got %+v", videos)
 	}
 }
 
@@ -167,6 +167,6 @@ func TestConcurrentTokenRefresh(t *testing.T) {
 	mu.Lock()
 	defer mu.Unlock()
 	if refreshCalls != 1 {
-		t.Errorf("expected refresh to be called once, got %d", refreshCalls)
+		t.Errorf("wanted refresh to be called once, got %d", refreshCalls)
 	}
 }

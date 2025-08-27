@@ -76,9 +76,11 @@ func (c *TwitchAPIClient) EnsureTokenValid() error {
 		c.Token = newToken
 		c.expires = newExpires
 	}
+
 	return nil
 }
 
+// defaultRefreshTokenFunc default token refresh function if one is not provided
 func (c *TwitchAPIClient) defaultRefreshTokenFunc() (string, time.Time, error) {
 	token, expiresIn, err := c.fetchToken()
 	if err != nil {
@@ -95,6 +97,7 @@ func (c *TwitchAPIClient) fetchToken() (string, int, error) {
 		TokenType   string `json:"token_type"`
 	}
 
+	// post request to twitch oauth2 API
 	data := fmt.Sprintf(
 		"client_id=%s&client_secret=%s&grant_type=client_credentials",
 		c.ClientID, c.ClientSecret,

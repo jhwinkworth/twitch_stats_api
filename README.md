@@ -43,11 +43,11 @@ docker build -t twitch-stats-api .
 ```
 docker run --env-file .env -p 8080:8080 twitch-stats-api
 ```
+- **--env-file .env** injects your environment variables at runtime.
+- **-p 8080:8080** maps the container port to your host.
 
 ### 5. Test the API
 curl "http://localhost:8080/streamers/12826/videos?n=5"
-- --env-file .env injects your environment variables at runtime.
-- -p 8080:8080 maps the container port to your host.
 
 Expected response
 ```
